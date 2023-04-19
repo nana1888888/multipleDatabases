@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.slaveMapper">
+    <select id="getkakao">
+        SELECT
+            NO1,
+            name,
+            number
+        FROM
+            sms_table.user
+                LIMIT 1
+    </select>
+</mapper>

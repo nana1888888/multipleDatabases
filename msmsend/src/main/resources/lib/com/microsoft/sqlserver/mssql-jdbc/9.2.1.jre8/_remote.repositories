@@ -1,0 +1,6 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Sun Mar 05 21:12:28 KST 2023
+mssql-jdbc-9.2.1.jre8.jar>central=
+mssql-jdbc-9.2.1.jre8-javadoc.jar>central=
+mssql-jdbc-9.2.1.jre8-sources.jar>central=
+mssql-jdbc-9.2.1.jre8.pom>central=

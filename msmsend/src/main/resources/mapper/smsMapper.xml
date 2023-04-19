@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="msm.msmsend.master.mapper.smsMapper">
+<select id="getTable" resultType="msm.msmsend.dto.smsDto">
+    SELECT
+        no1,
+        name,
+        number,
+        groupnm,
+        groupname,
+        othergroup,
+        basic
+    FROM
+        user
+</select>
+
+    <select id="getTableOtherNot" resultType="msm.msmsend.dto.smsDto">
+        SELECT
+            no1,
+            name,
+            number,
+            groupnm,
+            groupname,
+            othergroup,
+            basic
+        FROM
+            user
+        where basic is null
+    </select>
+    <select id="basicGroup" resultType="msm.msmsend.dto.smsDto">
+        SELECT
+            no1,
+            name,
+            number,
+            groupnm,
+            groupname,
+            othergroup,
+            basic
+        FROM
+            user
+        WHERE
+            basic is not null
+    </select>
+
+    <select id="getDISTINCT" resultType="msm.msmsend.dto.smsDto">
+        SELECT groupname,groupnm
+        FROM
+            user
+            group by groupname,groupnm
+    </select>
+
+    <select id="getDISTINCTOthergroup" resultType="msm.msmsend.dto.smsDto">
+        SELECT othergroup
+        FROM
+            user
+        group by othergroup
+    </select>
+    <select id="getTableNm" resultType="msm.msmsend.dto.smsDto">
+        SELECT
+            no1,
+            name,
+            number,
+            groupname,
+            othergroup
+        FROM
+            user
+        where groupnm = #{groupnm}
+    </select>
+
+    <select id="otherGroup" resultType="msm.msmsend.dto.smsDto">
+        SELECT
+            no1,
+            name,
+            number,
+            groupname,
+            otherGroup,
+            basic
+        FROM
+            user
+        where othergroup = #{othergroup}
+    </select>
+    <select id="userCheck" resultType="int">
+        select
+            count(*)
+        from
+            user
+        where number = #{user}
+    </select>
+
+    <select id="getText" resultType="string">
+        select
+            text
+        from
+            send_text
+    </select>
+
+
+    <insert id="insert" parameterType="string">
+        insert
+        sms_table.user
+            (
+            no1,
+            name,
+            number,
+            groupName,
+            groupnm)
+        value
+        (
+    next VALUE for sq_test,
+        #{name},
+        #{number},
+        #{groupname},
+        #{groupnm})
+    </insert>
+
+    <update id="delete">
+        delete
+        from user
+        where no1 = #{no1}
+    </update>
+    <update id="deleteExisting" parameterType="string">
+        UPDATE user
+        <set>
+                basic=null,
+        </set>
+        WHERE number=#{number}
+    </update>
+    <update id="update" parameterType="string">
+        UPDATE user
+        <set>
+            <if test='number!="--"'>
+                NUMBER=#{number},
+            </if>
+            <if test="name!='' and name!=null">
+                NAME=#{name},
+            </if>
+            <if test='groupname!=""'>
+                groupname=#{groupname},
+            </if>
+            <if test='groupnm!=""'>
+                groupnm=#{groupnm},
+            </if>
+            <if test='othergroup!=""'>
+                othergroup=#{othergroup},
+            </if>
+        </set>
+        WHERE no1=#{no1}
+    </update>
+    <update id="updateOtherGroup" parameterType="string">
+        UPDATE user
+          set
+             othergroup=#{othergroup}
+        WHERE  number = TRIM(#{number})
+    </update>
+    <insert id="smshistory" parameterType="string">
+        INSERT INTO sms_history
+        VALUES (#{number}, CURDATE(), #{text}, #{result},#{reason})
+    </insert>
+    <update id="updateBasic" parameterType="string">
+        UPDATE user
+        set
+            basic='existing'
+        WHERE  number = #{number}
+    </update>
+
+    <select id="getGroupnm" resultType="int">
+        SELECT
+            groupnm
+        FROM
+            user
+        WHERE
+            #{groupname}
+    </select>
+
+    <select id="getGroupname" resultType="String">
+        SELECT
+            groupname
+        FROM
+            user
+        WHERE
+            #{groupnm}
+    </select>
+
+    <select id="getUser" resultType="msm.msmsend.dto.smsDto">
+        SELECT *
+        FROM user
+        WHERE  1=1
+        <if test='no1!= null'>
+            AND no1 = #{no1}
+        </if>
+        <if test='number!= null'>
+            AND number in (#{number},CONCAT(substring(#{number}, 1, 3),'-',substring(#{number}, 4, 4),'-',substring(#{number},8,4)))
+        </if>
+    </select>
+
+    <select id="groupMax" resultType="int">
+        SELECT MAX(groupnm) FROM user;
+    </select>
+</mapper>
